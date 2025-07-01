@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Brain, Zap, Activity } from 'lucide-react';
+import { Brain, Zap, Activity, AlertCircle, Cpu } from 'lucide-react';
 
 interface DiffusionProcessorProps {
   images: File[];
@@ -13,14 +13,14 @@ const DiffusionProcessor: React.FC<DiffusionProcessorProps> = ({ images, onProce
   const [currentStep, setCurrentStep] = useState('');
 
   const processingSteps = [
-    'Loading images...',
-    'Preprocessing images (resize, normalize)...',
-    'Initializing UNet Conditional Diffusion Model...',
-    'Encoding temporal features...',
-    'Running diffusion forward pass...',
-    'Generating predicted frames...',
-    'Calculating evaluation metrics...',
-    'Finalizing results...'
+    '📁 Loading satellite images...',
+    '🔧 Preprocessing images (resize, normalize)...',
+    '🧠 Initializing UNet Conditional Diffusion Model...',
+    '⏰ Encoding temporal features...',
+    '🌊 Running diffusion forward pass...',
+    '🔮 Generating predicted frames...',
+    '📊 Calculating evaluation metrics...',
+    '✨ Finalizing simulated results...'
   ];
 
   useEffect(() => {
@@ -33,25 +33,27 @@ const DiffusionProcessor: React.FC<DiffusionProcessorProps> = ({ images, onProce
     setIsProcessing(true);
     setProgress(0);
 
-    // Simulate diffusion model processing
+    // Simulate diffusion model processing with more realistic timing
     for (let i = 0; i < processingSteps.length; i++) {
       setCurrentStep(processingSteps[i]);
       setProgress((i + 1) / processingSteps.length * 100);
       
-      // Simulate processing time
-      await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 400));
+      // Simulate variable processing time for different steps
+      const baseTime = 1000;
+      const variableTime = Math.random() * 800;
+      await new Promise(resolve => setTimeout(resolve, baseTime + variableTime));
     }
 
-    // Generate mock results
+    // Generate mock results with more realistic metrics
     const results = {
       inputImages: await Promise.all(images.map(file => fileToDataURL(file))),
       predictedFrames: await generateMockPredictions(images.length),
       metrics: {
-        ssim: 0.85 + Math.random() * 0.1,
-        mae: 0.05 + Math.random() * 0.03,
-        psnr: 25 + Math.random() * 5
+        ssim: 0.82 + Math.random() * 0.15, // Realistic SSIM range
+        mae: 0.03 + Math.random() * 0.04, // Realistic MAE range
+        psnr: 23 + Math.random() * 8      // Realistic PSNR range
       },
-      processingTime: (2.5 + Math.random() * 1.5).toFixed(2)
+      processingTime: (3.2 + Math.random() * 2.8).toFixed(2)
     };
 
     onProcessingComplete(results);
@@ -67,32 +69,53 @@ const DiffusionProcessor: React.FC<DiffusionProcessorProps> = ({ images, onProce
   };
 
   const generateMockPredictions = async (numInputs: number): Promise<string[]> => {
-    // In a real app, this would use the actual diffusion model
-    // For now, we'll generate abstract cloud-like patterns
+    // Generate more sophisticated cloud-like patterns
     const predictions = [];
     
     for (let i = 0; i < Math.min(3, numInputs); i++) {
       const canvas = document.createElement('canvas');
-      canvas.width = 256;
-      canvas.height = 256;
+      canvas.width = 320;
+      canvas.height = 320;
       const ctx = canvas.getContext('2d')!;
       
-      // Generate cloud-like patterns
-      const gradient = ctx.createRadialGradient(128, 128, 20, 128, 128, 128);
-      gradient.addColorStop(0, `hsl(${200 + i * 10}, 70%, ${85 - i * 5}%)`);
-      gradient.addColorStop(0.5, `hsl(${210 + i * 5}, 60%, ${75 - i * 3}%)`);
-      gradient.addColorStop(1, `hsl(${220 + i * 3}, 50%, ${65 - i * 2}%)`);
+      // Create more realistic cloud patterns
+      const baseHue = 200 + (i * 15);
+      const baseSat = 60 - (i * 5);
+      const baseLightness = 80 - (i * 8);
       
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, 256, 256);
+      // Background gradient
+      const bgGradient = ctx.createRadialGradient(160, 160, 0, 160, 160, 160);
+      bgGradient.addColorStop(0, `hsl(${baseHue}, ${baseSat}%, ${baseLightness}%)`);
+      bgGradient.addColorStop(0.7, `hsl(${baseHue + 10}, ${baseSat - 10}%, ${baseLightness - 15}%)`);
+      bgGradient.addColorStop(1, `hsl(${baseHue + 20}, ${baseSat - 20}%, ${baseLightness - 25}%)`);
       
-      // Add some noise for cloud texture
-      for (let j = 0; j < 1000; j++) {
-        const x = Math.random() * 256;
-        const y = Math.random() * 256;
-        const opacity = Math.random() * 0.3;
+      ctx.fillStyle = bgGradient;
+      ctx.fillRect(0, 0, 320, 320);
+      
+      // Add cloud-like formations
+      for (let j = 0; j < 20; j++) {
+        const x = Math.random() * 320;
+        const y = Math.random() * 320;
+        const radius = 20 + Math.random() * 40;
+        const opacity = 0.3 + Math.random() * 0.4;
+        
+        const cloudGradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
+        cloudGradient.addColorStop(0, `rgba(255, 255, 255, ${opacity})`);
+        cloudGradient.addColorStop(1, `rgba(255, 255, 255, 0)`);
+        
+        ctx.fillStyle = cloudGradient;
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, 2 * Math.PI);
+        ctx.fill();
+      }
+      
+      // Add some texture
+      for (let k = 0; k < 2000; k++) {
+        const x = Math.random() * 320;
+        const y = Math.random() * 320;
+        const opacity = Math.random() * 0.2;
         ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
-        ctx.fillRect(x, y, 2, 2);
+        ctx.fillRect(x, y, 1, 1);
       }
       
       predictions.push(canvas.toDataURL());
@@ -107,36 +130,76 @@ const DiffusionProcessor: React.FC<DiffusionProcessorProps> = ({ images, onProce
 
   return (
     <div className="mb-8">
-      <h2 className="text-2xl font-bold mb-4 text-gray-800 flex items-center gap-2">
+      <h2 className="text-2xl font-bold mb-6 text-gray-800 flex items-center gap-2">
         <Brain className="text-purple-500" />
-        Conditional Diffusion Processing
+        🧠 Conditional Diffusion Processing
       </h2>
 
       {isProcessing && (
         <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-lg">
+          {/* Processing Header */}
           <div className="flex items-center gap-3 mb-4">
-            <Activity className="text-purple-500 animate-pulse" />
-            <span className="font-semibold text-gray-800">Processing with UNet Architecture</span>
+            <div className="flex items-center gap-2">
+              <Activity className="text-purple-500 animate-pulse" />
+              <Cpu className="text-blue-500 animate-bounce" />
+            </div>
+            <div>
+              <span className="font-semibold text-gray-800">⚡ Processing with UNet Architecture</span>
+              <div className="flex items-center gap-2 mt-1">
+                <AlertCircle className="text-amber-500" size={14} />
+                <span className="text-xs text-amber-600">Simulation Mode Active</span>
+              </div>
+            </div>
           </div>
           
-          <div className="mb-4">
-            <div className="flex justify-between text-sm text-gray-600 mb-1">
-              <span>{currentStep}</span>
-              <span>{Math.round(progress)}%</span>
+          {/* Progress Section */}
+          <div className="mb-6">
+            <div className="flex justify-between text-sm text-gray-600 mb-2">
+              <span className="font-medium">{currentStep}</span>
+              <span className="font-bold text-purple-600">{Math.round(progress)}%</span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
+            <div className="w-full bg-gray-200 rounded-full h-3 shadow-inner">
               <div
-                className="bg-gradient-to-r from-purple-500 to-blue-500 h-2 rounded-full transition-all duration-300"
+                className="bg-gradient-to-r from-purple-500 via-blue-500 to-green-500 h-3 rounded-full transition-all duration-500 shadow-sm"
                 style={{ width: `${progress}%` }}
               />
             </div>
           </div>
 
-          <div className="text-xs text-gray-500 space-y-1">
-            <p>• Temporal sequence encoding with attention mechanisms</p>
-            <p>• Multi-scale feature extraction via U-Net encoder-decoder</p>
-            <p>• Conditional generation with noise scheduling</p>
-            <p>• Motion vector prediction and atmospheric modeling</p>
+          {/* Technical Details */}
+          <div className="bg-gray-50 rounded-lg p-4">
+            <h3 className="font-semibold text-gray-700 mb-3 flex items-center gap-2">
+              <Zap className="text-yellow-500" size={16} />
+              🔬 Current Processing Details
+            </h3>
+            <div className="text-xs text-gray-600 space-y-2">
+              <div className="flex items-center gap-2">
+                <span>🔄</span>
+                <span>Temporal sequence encoding with attention mechanisms</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span>🏗️</span>
+                <span>Multi-scale feature extraction via U-Net encoder-decoder</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span>🎯</span>
+                <span>Conditional generation with noise scheduling</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span>🌪️</span>
+                <span>Motion vector prediction and atmospheric modeling</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Simulation Notice */}
+          <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <div className="flex items-center gap-2">
+              <AlertCircle className="text-yellow-600" size={16} />
+              <span className="text-sm font-medium text-yellow-800">
+                🎭 Demo Mode: Real diffusion model integration coming soon!
+              </span>
+            </div>
           </div>
         </div>
       )}
